@@ -1,38 +1,13 @@
-#https://github.com/MyRobotLab/pyrobotlab/blob/52c4e24b46be2d39d94ffe27afa9ea0aacfaf7d1/home/pedrosenarego/leapMotionSaveDataIndex.py
+##################################################################
+# Record motion new
+##################################################################
 
-##################################################################
-# Leap Motion Example Script
-##################################################################
-import csv
-# when leap motion data is detected, it will be passed in here
-def onLeapData(data):
-  # process the data that came in.
-  # right hand first
-  #create file
-  global writer
-  f = open("Index.csv", "a")
-  writer = csv.writer(f, delimiter='\t', lineterminator='\n',)
-  
-  if (data.rightHand):
-    # if the data has a right hand, print out some info about it.
-    print("Right Index =" + str(data.rightHand.index))
-    # update a position of
-    columns = [ data.rightHand.index,
-                ]
-    writer.writerow(columns)
-    
-  else:
-    # the right hand wasn't found.
-    print("Right hand not detected.")
-  # left hand data.
-  
-  if (data.frame):
-    # this is the raw frame info from the leap if you want it.
-    print(str(frame))
-    
-###########################################################
-# MAIN Script entry point
-###########################################################
+#create file for loging the data
+txt = open("Log.txt", "w")
+txt.write("90,")
+txt.close
+txt = open("Log.txt", "a")
+
 
 # create the leap motion service
 leap = Runtime.createAndStart("leap","LeapMotion")
@@ -42,5 +17,13 @@ leap.addLeapDataListener(python)
 leap.startTracking()
 
 
+# when leap motion data is detected, it will be passed in here
+def onLeapData(data):
+	if (data.rightHand):
+		# if the data has a right hand, print out some info about it.
+		data = data.rightHand.index
+		data = "" if data == 0 else str(data)+","
+		print("Right Index =" + data)
+		txt.write(data)
 
-
+txt.close

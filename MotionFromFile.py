@@ -1,35 +1,37 @@
-#https://github.com/MyRobotLab/pyrobotlab/blob/52c4e24b46be2d39d94ffe27afa9ea0aacfaf7d1/home/pedrosenarego/leapMotionLoopFromTxt.py
+######################################################################
+# New file for file reading robot control
+######################################################################
+import time
 
-
-import csv
-
-f = open("Index.csv", "rb")
-reader = csv.reader(f, delimiter='\t', lineterminator='\n',)
-columns = list(reader)
-
-print(columns)
-#indexarino = ((100-columns)*1.8)
-#servo01.moveTo(indexarino)   
-  
-# set the servo pin that we'll control
+#Variables:
+#servoPin - is the pin the servo is connected to, restPosition - The position the finger goes to before and after finnisheing the task, comPort - is the port the Ardruino is connected to
 servoPin = 3
-# specify a rest postion for the servo
 restPosition = 90
-# specify a com port for the arduino
-comPort = "/dev/ttyACM0"
+comPort = "COM5"
 
 # create the servo & arduino services
 arduino = Runtime.start("arduino","Arduino")
-servo01 = Runtime.start("servo01","Servo")
+servo = Runtime.start("servo","Servo")
 
+#connect ardruino and attache servo
 arduino.connect(comPort)
-# TODO - set limits
-servo01.setMinMax(0, 180)
-servo01.map(0, 180, 0, 180)
-servo01.setVelocity(-1)
-# attach servo
-servo01.attach(arduino.getName(), servoPin)
-# lets move the servo to it's rest position.
+servo.attach(arduino.getName(), servoPin)
 
-servo01.moveTo(columns)
-sleep(0.5)
+# TODO - set limits
+servo.setMinMax(0, 180)
+servo.map(0, 180, 0, 180)
+servo.setVelocity(-1)
+
+#data array
+txt = open("Moves.txt", "r")
+moves = txt.read().split(",")
+#moves = [20,90,160]
+txt.close()
+
+# move servo
+servo.moveTo(restPosition)
+
+for x in moves:
+	print(x)
+	servo.moveTo(x)
+	time.sleep(1)
