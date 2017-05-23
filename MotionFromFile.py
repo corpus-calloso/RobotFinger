@@ -33,5 +33,5 @@ servo.moveTo(restPosition)
 
 for x in moves:
 	print(x)
-	servo.moveTo(x)
+	servo.moveTo(x) #Here the MRL for some reason gives error ... please check and give feedback
 	time.sleep(1)
